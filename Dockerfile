@@ -43,7 +43,7 @@ RUN R -e "install.packages(c('odbc', 'DT', 'furrr', 'plumber', 'tidygraph', 'ggf
 # install rstan and other dependencies and useful packages using rscript
 ###############
 
-COPY ./docker/install_rstan.R /etc/rstudio/
+COPY ./install_rstan.R /etc/rstudio/
 RUN Rscript /etc/rstudio/install_rstan.R
 
 ################
@@ -65,7 +65,7 @@ RUN R -e "install.packages(c('shinydashboard'))"
 # modelling packages
 #############
 
-RUN R -e "install.packages(c('tidymodels', 'ranger', 'C50', 'kernlab', 'nlme'))"
+#RUN R -e "install.packages(c('tidymodels', 'ranger', 'C50', 'kernlab', 'nlme'))"
 
 
 ################
@@ -73,5 +73,6 @@ RUN R -e "install.packages(c('tidymodels', 'ranger', 'C50', 'kernlab', 'nlme'))"
 ################
 
 COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
-RUN chown -hR rstudio:rstudio /home/rstudio/ShinyApps
+RUN mkdir -p /home/rstudio/ShinyApps && \
+	chown -hR rstudio:rstudio /home/rstudio/ShinyApps
 
