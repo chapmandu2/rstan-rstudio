@@ -7,7 +7,7 @@ run: build
 		-e DISABLE_AUTH=true \
 		--name='rstan-rstudio' \
 		-v ${HOME}:/home/rstudio/hostdata \
-		activity-explore-bayes
+		rstan-rstudio
 
 stop:
 	docker stop rstan-rstudio

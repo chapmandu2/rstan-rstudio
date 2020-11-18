@@ -1,7 +1,7 @@
-FROM rocker/verse:3.6.0
+FROM rocker/verse:4.0.3
 
 # add shiny server
-RUN export ADD=shiny && bash /etc/cont-init.d/add
+#RUN export ADD=shiny && bash /etc/cont-init.d/add
 
 ################
 #linux deps general
@@ -12,7 +12,8 @@ RUN apt-get update -y && \
 		gnupg \
 		curl \
 		apt-transport-https \
-		apt-utils
+		apt-utils \
+		unixodbc
 
 ################
 #odbc and MS SQL Server
@@ -20,7 +21,7 @@ RUN apt-get update -y && \
 
 RUN \
 	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-	curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+	curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
 	apt-get update -y && \
 	ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
@@ -40,7 +41,7 @@ RUN sed -i "/^MAKE/c\MAKE='make -j 6'" /usr/local/lib/R/etc/Renviron
 RUN R -e "install.packages(c('odbc', 'DT', 'furrr', 'plumber', 'tidygraph', 'ggforce', 'ggraph'))"
 
 ###############
-# install rstan and other dependencies and useful packages using rscript
+# install rstan and other dependencies using rscript
 ###############
 
 COPY ./install_rstan.R /etc/rstudio/
@@ -50,16 +51,21 @@ RUN Rscript /etc/rstudio/install_rstan.R
 # install rjags + others
 ################
 
-RUN apt-get install -y jags && \
-	R -e "install.packages(c('rjags', 'prophet'))"
+RUN apt-get install -y jags
+RUN R -e "install.packages(c('rjags', 'prophet', 'tidybayes', 'brms', 'fitdistrplus'))"
 
-RUN R -e "devtools::install_github('mjskay/tidybayes.rethinking', dependencies=FALSE, upgrade_dependencies=FALSE)"
+#############
+#install rethinking
+############
+RUN R -e "install.packages(c('mvtnorm', 'loo', 'coda'))"
+RUN R -e "remotes::install_github('rmcelreath/rethinking', ref='Experimental', upgrade='never')"
+#RUN R -e "devtools::install_github('mjskay/tidybayes.rethinking', dependencies=FALSE, upgrade_dependencies=FALSE)"
 
 #############
 # visualisation packages
 #############
 
-RUN R -e "install.packages(c('shinydashboard'))"
+#RUN R -e "install.packages(c('shinydashboard'))"
 
 #############
 # modelling packages
@@ -72,7 +78,7 @@ RUN R -e "install.packages(c('shinydashboard'))"
 # configure shiny server
 ################
 
-COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
-RUN mkdir -p /home/rstudio/ShinyApps && \
-	chown -hR rstudio:rstudio /home/rstudio/ShinyApps
+#COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
+#RUN mkdir -p /home/rstudio/ShinyApps && \
+#	chown -hR rstudio:rstudio /home/rstudio/ShinyApps
 
