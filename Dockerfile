@@ -29,16 +29,16 @@ RUN \
 # install linux dependencies of R packages
 ################
 
-#RUN apt-get install -y libudunits2-dev
+RUN apt-get install -y libudunits2-dev
 
 ################
 # install R dependencies
 ################
 
 #modify the default MAKE setting to allow parallel compiling
-#RUN sed -i "/^MAKE/c\MAKE='make -j 6'" /usr/local/lib/R/etc/Renviron
+RUN sed -i "/^MAKE/c\MAKE='make -j 6'" /usr/local/lib/R/etc/Renviron
 
-#RUN R -e "install.packages(c('odbc', 'DT', 'furrr', 'plumber', 'tidygraph', 'ggforce', 'ggraph'))"
+RUN R -e "install.packages(c('odbc', 'DT', 'furrr', 'plumber', 'tidygraph', 'ggforce', 'ggraph'))"
 
 ###############
 # install rstan and other dependencies using rscript
