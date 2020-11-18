@@ -52,13 +52,13 @@ RUN Rscript /etc/rstudio/install_rstan.R
 ################
 
 RUN apt-get install -y jags
-RUN R -e "install.packages(c('rjags', 'prophet', 'tidybayes', 'brms'))"
+RUN R -e "install.packages(c('rjags', 'prophet', 'tidybayes', 'brms', 'fitdistrplus'))"
 
 #############
 #install rethinking
 ############
 RUN R -e "install.packages(c('mvtnorm', 'loo', 'coda'))"
-RUN R -e "devtools::install_github('rmcelreath/rethinking', ref='Experimental')"
+RUN R -e "remotes::install_github('rmcelreath/rethinking', ref='Experimental', upgrade='never')"
 #RUN R -e "devtools::install_github('mjskay/tidybayes.rethinking', dependencies=FALSE, upgrade_dependencies=FALSE)"
 
 #############
