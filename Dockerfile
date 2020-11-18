@@ -44,8 +44,8 @@ RUN R -e "install.packages(c('odbc', 'DT', 'furrr', 'plumber', 'tidygraph', 'ggf
 # install rstan and other dependencies using rscript
 ###############
 
-#COPY ./install_rstan.R /etc/rstudio/
-#RUN Rscript /etc/rstudio/install_rstan.R
+COPY ./install_rstan.R /etc/rstudio/
+RUN Rscript /etc/rstudio/install_rstan.R
 
 ################
 # install rjags + others
