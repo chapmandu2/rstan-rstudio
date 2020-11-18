@@ -16,11 +16,4 @@ cat("\nCXXFLAGS=-O3 -mtune=native -march=native",
 #install RStan and dependencies
 install.packages("rstan",  dependencies=TRUE)
 
-#install brms + tidybayes
-install.packages(c('brms', 'tidybayes'))
-
-#install rethinking
-install.packages(c('mvtnorm', 'loo', 'coda'))
-devtools::install_github('rmcelreath/rethinking', ref='Experimental')
-
 q()
